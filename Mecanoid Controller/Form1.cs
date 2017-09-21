@@ -28,6 +28,7 @@ namespace Mecanoid_Controller
 
         private void btnStandPose_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("선 동작");
             motor.Close();
             c3d.m_CMotor.Connect(port, 115200);
             c3d.m_CMotor.DrvSrv(true, true);
@@ -46,6 +47,7 @@ namespace Mecanoid_Controller
             }
             c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEnd.dmt", false);
             */
+            Ojw.CMessage.Write("앞으로 걷기");
             walking = true;
             c3d.Motion_Play(@"D:\Mecanoid project\motions\walkStartRight.dmt", false);
             bool rightStep = true;
@@ -73,11 +75,13 @@ namespace Mecanoid_Controller
 
         private void btnWalkStop_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("걸음 정지");
             walking = false;
         }
 
         private void btnTrans1_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("메카넘 모드로 트랜스포밍");
             motor.Close();
             c3d.Motion_Play(@"D:\Mecanoid project\motions\transformingRight.dmt", true);
             c3d.m_CMotor.DisConnect();
@@ -89,6 +93,7 @@ namespace Mecanoid_Controller
 
         private void btnTrans2_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("보행 모드로 트랜스포밍");
             motor.Close();
             c3d.m_CMotor.Connect(port, 115200);
             c3d.m_CMotor.DrvSrv(true, true);
@@ -225,7 +230,9 @@ namespace Mecanoid_Controller
             motor.SetTorque(true, true);
 
             motor.Set_Turn(30, -mecanumSpd);
+            motor.Set_Turn(31, 0);
             motor.Set_Turn(32, mecanumSpd);
+            motor.Set_Turn(33, 0);
             motor.Set_Flag_Led(30, true, true, false);
             motor.Set_Flag_Led(31, true, true, false);
             motor.Set_Flag_Led(32, true, true, false);
@@ -239,7 +246,9 @@ namespace Mecanoid_Controller
         {
             motor.SetTorque(true, true);
 
+            motor.Set_Turn(30, 0);
             motor.Set_Turn(31, -mecanumSpd);
+            motor.Set_Turn(32, 0);
             motor.Set_Turn(33, mecanumSpd);
             motor.Set_Flag_Led(30, true, true, false);
             motor.Set_Flag_Led(31, true, true, false);
@@ -254,7 +263,9 @@ namespace Mecanoid_Controller
         {
             motor.SetTorque(true, true);
 
+            motor.Set_Turn(30, 0);
             motor.Set_Turn(31, mecanumSpd);
+            motor.Set_Turn(32, 0);
             motor.Set_Turn(33, -mecanumSpd);
             motor.Set_Flag_Led(30, true, true, false);
             motor.Set_Flag_Led(31, true, true, false);
@@ -270,7 +281,9 @@ namespace Mecanoid_Controller
             motor.SetTorque(true, true);
 
             motor.Set_Turn(30, mecanumSpd);
+            motor.Set_Turn(31, 0);
             motor.Set_Turn(32, -mecanumSpd);
+            motor.Set_Turn(33, 0);
             motor.Set_Flag_Led(30, true, true, false);
             motor.Set_Flag_Led(31, true, true, false);
             motor.Set_Flag_Led(32, true, true, false);
@@ -308,8 +321,8 @@ namespace Mecanoid_Controller
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            motor.SetTorque(false, false);
-            c3d.m_CMotor.DrvSrv(false, false);
+            motor.SetTorque(true, false);
+            c3d.m_CMotor.DrvSrv(true, false);
             motor.Close();
             c3d.m_CMotor.DisConnect();
 
@@ -322,6 +335,8 @@ namespace Mecanoid_Controller
             port = Convert.ToInt16(txtPort.Text);
             if(c3d.m_CMotor.Connect(port, 115200) == true)
             {
+                Ojw.CMessage.Write("연결 성공");
+
                 c3d.m_CMotor.DrvSrv(true, true);
                 mecanumMode = false;
                 buttonHide();
@@ -348,7 +363,31 @@ namespace Mecanoid_Controller
 
         private void btnWalkBack_Click(object sender, EventArgs e)
         {
-
+            Ojw.CMessage.Write("뒤로 걷기");
+            walking = true;
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackStartR.dmt", false);
+            bool rightStep = true;
+            while (walking)
+            {
+                if (rightStep == true)
+                {
+                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackWalkingL.dmt", false);
+                    rightStep = false;
+                }
+                else
+                {
+                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackWalkingR.dmt", false);
+                    rightStep = true;
+                }
+            }
+            if (rightStep == true)
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackEndL.dmt", false);
+            }
+            else
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackEndR.dmt", false);
+            }
         }
 
         private void btnTorqueOn_Click(object sender, EventArgs e)
@@ -417,6 +456,7 @@ namespace Mecanoid_Controller
 
         private void btnMecanumPose_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("메카넘 포즈");
             motor.Close();
             c3d.m_CMotor.Connect(port, 115200);
             c3d.Motion_Play(@"D:\Mecanoid project\motions\poseMecanum.dmt", false);
@@ -425,6 +465,30 @@ namespace Mecanoid_Controller
             motor.SetTorque(true, true);
             mecanumMode = true;
             buttonHide();
+        }
+
+        private void btnWalkRight_Click(object sender, EventArgs e)
+        {
+            Ojw.CMessage.Write("오른쪽으로 걷기");
+            walking = true;
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightStart.dmt", false);
+            while (walking)
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightWalking.dmt", false);
+            }
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightEnd.dmt", false);
+        }
+
+        private void btnWalkLeft_Click(object sender, EventArgs e)
+        {
+            Ojw.CMessage.Write("왼쪽으로 걷기");
+            walking = true;
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftStart.dmt", false);
+            while (walking)
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftWalking.dmt", false);
+            }
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftEnd.dmt", false);
         }
     }
 }

@@ -204,27 +204,29 @@
             // 
             // btnWalkLeft
             // 
-            this.btnWalkLeft.Location = new System.Drawing.Point(217, 209);
+            this.btnWalkLeft.Location = new System.Drawing.Point(13, 209);
             this.btnWalkLeft.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnWalkLeft.Name = "btnWalkLeft";
             this.btnWalkLeft.Size = new System.Drawing.Size(98, 69);
             this.btnWalkLeft.TabIndex = 13;
             this.btnWalkLeft.Text = "왼쪽으로\r\n걷기";
             this.btnWalkLeft.UseVisualStyleBackColor = true;
+            this.btnWalkLeft.Click += new System.EventHandler(this.btnWalkLeft_Click);
             // 
             // btnWalkRight
             // 
-            this.btnWalkRight.Location = new System.Drawing.Point(13, 209);
+            this.btnWalkRight.Location = new System.Drawing.Point(217, 209);
             this.btnWalkRight.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnWalkRight.Name = "btnWalkRight";
             this.btnWalkRight.Size = new System.Drawing.Size(98, 69);
             this.btnWalkRight.TabIndex = 14;
             this.btnWalkRight.Text = "오른쪽으로\r\n걷기";
             this.btnWalkRight.UseVisualStyleBackColor = true;
+            this.btnWalkRight.Click += new System.EventHandler(this.btnWalkRight_Click);
             // 
             // btnTrans1
             // 
-            this.btnTrans1.Location = new System.Drawing.Point(386, 284);
+            this.btnTrans1.Location = new System.Drawing.Point(387, 287);
             this.btnTrans1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnTrans1.Name = "btnTrans1";
             this.btnTrans1.Size = new System.Drawing.Size(164, 60);
@@ -288,7 +290,7 @@
             // 
             // btnTrans2
             // 
-            this.btnTrans2.Location = new System.Drawing.Point(386, 353);
+            this.btnTrans2.Location = new System.Drawing.Point(387, 356);
             this.btnTrans2.Name = "btnTrans2";
             this.btnTrans2.Size = new System.Drawing.Size(164, 60);
             this.btnTrans2.TabIndex = 23;
@@ -308,7 +310,7 @@
             // 
             // btnStandPose
             // 
-            this.btnStandPose.Location = new System.Drawing.Point(277, 318);
+            this.btnStandPose.Location = new System.Drawing.Point(278, 321);
             this.btnStandPose.Name = "btnStandPose";
             this.btnStandPose.Size = new System.Drawing.Size(101, 60);
             this.btnStandPose.TabIndex = 25;
@@ -338,7 +340,7 @@
             // 
             // btnMecanumPose
             // 
-            this.btnMecanumPose.Location = new System.Drawing.Point(558, 318);
+            this.btnMecanumPose.Location = new System.Drawing.Point(559, 321);
             this.btnMecanumPose.Name = "btnMecanumPose";
             this.btnMecanumPose.Size = new System.Drawing.Size(101, 60);
             this.btnMecanumPose.TabIndex = 30;
