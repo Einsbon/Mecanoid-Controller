@@ -32,34 +32,43 @@ namespace Mecanoid_Controller
             c3d.m_CMotor.Connect(port, 115200);
             c3d.m_CMotor.DrvSrv(true, true);
             c3d.Motion_Play(@"D:\Mecanoid project\motions\stand.dmt", false);
-            c3d.m_CMotor.DisConnect();
             mecanumMode = false;
             buttonHide();
         }
 
         private void btnWalkStraight_Click(object sender, EventArgs e)
-        {
-            //motor.Close();
-            /*
-            if (c3d.m_CMotor.Connect(10, 115200) == true)
-            {
-                c3d.m_CMotor.DrvSrv(true, true);
-                walking = true;
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walk_straight_start.dmt", true);
-                while (walking)
-                {
-                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walk_straight_walking.dmt", true);
-                }
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walk_straight_end.dmt", true);
-                c3d.m_CMotor.DisConnect();
-            }*/
+        {/*
+            walking = true;
             c3d.Motion_Play(@"D:\Mecanoid project\motions\walkStart.dmt", false);
             while (walking)
             {
                 c3d.Motion_Play(@"D:\Mecanoid project\motions\walkWalking.dmt", false);
             }
             c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEnd.dmt", false);
-            //motor.Open(10, 115200);
+            */
+            walking = true;
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\walkStartRight.dmt", false);
+            bool rightStep = true;
+            while (walking)
+            {
+                if(rightStep == true)
+                {
+                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkWalkingLeft.dmt", false);
+                    rightStep = false;
+                } else
+                {
+                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkWalkingRight.dmt", false);
+                    rightStep = true;
+                }
+            }
+            if(rightStep == true)
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEndLeft.dmt", false);
+            }
+            else
+            {
+                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEndRight.dmt", false);
+            }
         }
 
         private void btnWalkStop_Click(object sender, EventArgs e)
@@ -70,7 +79,7 @@ namespace Mecanoid_Controller
         private void btnTrans1_Click(object sender, EventArgs e)
         {
             motor.Close();
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\transformingRight.dmt", false);
+            c3d.Motion_Play(@"D:\Mecanoid project\motions\transformingRight.dmt", true);
             c3d.m_CMotor.DisConnect();
             motor.Open(port, 115200);
             motor.SetTorque(true, true);
@@ -90,6 +99,7 @@ namespace Mecanoid_Controller
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            buttonAllHide();
             Ojw.CMessage.Init(textBox1);
             c3d.Init(lbDisp);
             if(c3d.FileOpen(@"D:\Mecanoid project\ojw files\인버스 미완성 2.ojw") == true)
@@ -272,12 +282,17 @@ namespace Mecanoid_Controller
 
         private void btnStopMecanum_Click(object sender, EventArgs e)
         {
-            c3d.m_CMotor2.Set_Turn(30, 0);
-            c3d.m_CMotor2.Set_Turn(31, 0);
-            c3d.m_CMotor2.Set_Turn(32, 0);
-            c3d.m_CMotor2.Set_Turn(33, 0);
-            c3d.m_CMotor2.Send_Motor(100);
-            c3d.m_CMotor2.Wait_Delay(100);
+            motor.Set_Turn(30, 0);
+            motor.Set_Turn(31, 0);
+            motor.Set_Turn(32, 0);
+            motor.Set_Turn(33, 0);
+            motor.Set_Flag_Led(30, false, false, false);
+            motor.Set_Flag_Led(31, false, false, false);
+            motor.Set_Flag_Led(32, false, false, false);
+            motor.Set_Flag_Led(33, false, false, false);
+
+            motor.Send_Motor(100);
+            motor.Wait_Delay(100);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -294,6 +309,7 @@ namespace Mecanoid_Controller
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             motor.SetTorque(false, false);
+            c3d.m_CMotor.DrvSrv(false, false);
             motor.Close();
             c3d.m_CMotor.DisConnect();
 
@@ -309,6 +325,11 @@ namespace Mecanoid_Controller
                 c3d.m_CMotor.DrvSrv(true, true);
                 mecanumMode = false;
                 buttonHide();
+                btnStandPose.Enabled = true;
+                btnMecanumPose.Enabled = true;
+                btnDisconnect.Enabled = true;
+                btnTorqueOn.Enabled = true;
+                btnTorqueOff.Enabled = true;
             }
             else
             {
@@ -319,6 +340,8 @@ namespace Mecanoid_Controller
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
+            c3d.m_CMotor.DrvSrv(false, false);
+            motor.SetTorque(true, true);
             motor.Close();
             c3d.m_CMotor.DisConnect();
         }
@@ -361,6 +384,35 @@ namespace Mecanoid_Controller
             btnWalkRight.Enabled = !mecanumMode;
             btnWalkBack.Enabled = !mecanumMode;
             btnTrans2.Enabled = mecanumMode;
+        }
+
+        private void buttonAllHide()
+        {
+            btnB.Enabled = false;
+            btnBL.Enabled = false;
+            btnBR.Enabled = false;
+            btnF.Enabled = false;
+            btnFL.Enabled = false;
+            btnFR.Enabled = false;
+            btnL.Enabled = false;
+            btnR.Enabled = false;
+            btnTurnL.Enabled = false;
+            btnTurnR.Enabled = false;
+            btnTrans1.Enabled = false;
+            btnStopMecanum.Enabled = false;
+
+            btnWalkStraight.Enabled = false;
+            btnWalkStop.Enabled = false;
+            btnWalkLeft.Enabled = false;
+            btnWalkRight.Enabled = false;
+            btnWalkBack.Enabled = false;
+            btnTrans2.Enabled = false;
+
+            btnTorqueOff.Enabled = false;
+            btnTorqueOn.Enabled = false;
+            btnStandPose.Enabled = false;
+            btnMecanumPose.Enabled = false;
+            btnDisconnect.Enabled = false;
         }
 
         private void btnMecanumPose_Click(object sender, EventArgs e)

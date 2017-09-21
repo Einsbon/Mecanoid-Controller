@@ -236,9 +236,9 @@
             // lbDisp
             // 
             this.lbDisp.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.lbDisp.Location = new System.Drawing.Point(335, 13);
+            this.lbDisp.Location = new System.Drawing.Point(330, 9);
             this.lbDisp.Name = "lbDisp";
-            this.lbDisp.Size = new System.Drawing.Size(319, 249);
+            this.lbDisp.Size = new System.Drawing.Size(347, 265);
             this.lbDisp.TabIndex = 17;
             this.lbDisp.Text = "label1";
             // 
@@ -381,7 +381,7 @@
             this.Font = new System.Drawing.Font("맑은 고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Mecanoid controller";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
