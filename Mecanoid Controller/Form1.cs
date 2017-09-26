@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using OpenJigWare;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using OpenJigWare;
 
 namespace Mecanoid_Controller
 {
@@ -19,7 +12,8 @@ namespace Mecanoid_Controller
         bool walking = false;
         bool mecanumMode = false;
 
-        int mecanumSpd = 800;
+        int mecanumSpd = 1000;
+        double mecanumAdd = 1.6;
 
         public Form1()
         {
@@ -32,7 +26,8 @@ namespace Mecanoid_Controller
             motor.Close();
             c3d.m_CMotor.Connect(port, 115200);
             c3d.m_CMotor.DrvSrv(true, true);
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\stand.dmt", false);
+            //c3d.Motion_Play(@"D:\Mecanoid project\motions\stand2Slow.dmt", false);
+            c3d.Motion_Play(@"motions\stand2Slow.dmt", false);
             mecanumMode = false;
             buttonHide();
         }
@@ -47,30 +42,35 @@ namespace Mecanoid_Controller
             }
             c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEnd.dmt", false);
             */
-            Ojw.CMessage.Write("앞으로 걷기");
+            buttonWorking(false);
+            Ojw.CMessage.Write("앞으로 걷기 시작");
             walking = true;
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\walkStartRight.dmt", false);
+            c3d.Motion_Play(@"motions\walkStartRight2.dmt", false);
             bool rightStep = true;
             while (walking)
             {
-                if(rightStep == true)
+                if (rightStep == true)
                 {
-                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkWalkingLeft.dmt", false);
+                    c3d.Motion_Play(@"motions\walkWalkingLeft2.dmt", false);
                     rightStep = false;
-                } else
+                }
+                else
                 {
-                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkWalkingRight.dmt", false);
+                    c3d.Motion_Play(@"motions\walkWalkingRight2.dmt", false);
                     rightStep = true;
                 }
             }
-            if(rightStep == true)
+            if (rightStep == true)
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEndLeft.dmt", false);
+                c3d.Motion_Play(@"motions\walkEndLeft2.dmt", false);
             }
             else
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkEndRight.dmt", false);
-            }
+                c3d.Motion_Play(@"motions\walkEndRight2.dmt", false);
+            }//stand2Quick
+            c3d.Motion_Play(@"motions\stand2.dmt", false);
+            buttonWorking(true);
+            Ojw.CMessage.Write("앞으로 걷기 종료");
         }
 
         private void btnWalkStop_Click(object sender, EventArgs e)
@@ -83,7 +83,7 @@ namespace Mecanoid_Controller
         {
             Ojw.CMessage.Write("메카넘 모드로 트랜스포밍");
             motor.Close();
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\transformingRight.dmt", true);
+            c3d.Motion_Play(@"motions\transformingRightQuick.dmt", true);
             c3d.m_CMotor.DisConnect();
             motor.Open(port, 115200);
             motor.SetTorque(true, true);
@@ -94,24 +94,28 @@ namespace Mecanoid_Controller
         private void btnTrans2_Click(object sender, EventArgs e)
         {
             Ojw.CMessage.Write("보행 모드로 트랜스포밍");
-            motor.Close();
+            motor.Close(); 
             c3d.m_CMotor.Connect(port, 115200);
             c3d.m_CMotor.DrvSrv(true, true);
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\transformingLeft2.dmt", false);
+            c3d.Motion_Play(@"motions\transformingLeft2.dmt", false);
+            c3d.Motion_Play(@"motions\stand2.dmt", false);
             mecanumMode = false;
             buttonHide();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            buttonAllHide();
+            //buttonAllHide();
             Ojw.CMessage.Init(textBox1);
             c3d.Init(lbDisp);
-            if(c3d.FileOpen(@"D:\Mecanoid project\ojw files\인버스 미완성 2.ojw") == true)
+            if (c3d.FileOpen(@"ojw files\mecanoid.ojw") == true)
             {
                 timer1.Enabled = true;
             }
-            //motor.Open(10, 115200);
+            else
+            {
+                MessageBox.Show("모델 불러오기 실패");
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -134,6 +138,7 @@ namespace Mecanoid_Controller
             motor.Set_Flag_Led(33, true, true, false);
 
             motor.Send_Motor(100);
+            Ojw.CMessage.Write("메카넘휠 앞으로");
             motor.Wait_Delay(100);
         }
 
@@ -152,6 +157,7 @@ namespace Mecanoid_Controller
             motor.Set_Flag_Led(33, true, true, false);
 
             motor.Send_Motor(100);
+            Ojw.CMessage.Write("메카넘휠 오른쪽");
             motor.Wait_Delay(100);
         }
 
@@ -170,6 +176,7 @@ namespace Mecanoid_Controller
             motor.Set_Flag_Led(33, true, true, false);
 
             motor.Send_Motor(100);
+            Ojw.CMessage.Write("메카넘휠 뒤로");
             motor.Wait_Delay(100);
         }
 
@@ -188,6 +195,7 @@ namespace Mecanoid_Controller
             motor.Set_Flag_Led(33, true, true, false);
 
             motor.Send_Motor(100);
+            Ojw.CMessage.Write("메카넘휠 왼쪽");
             motor.Wait_Delay(100);
         }
 
@@ -305,6 +313,7 @@ namespace Mecanoid_Controller
             motor.Set_Flag_Led(33, false, false, false);
 
             motor.Send_Motor(100);
+            Ojw.CMessage.Write("메카넘휠 정지");
             motor.Wait_Delay(100);
         }
 
@@ -333,7 +342,7 @@ namespace Mecanoid_Controller
         private void btnConnect_Click(object sender, EventArgs e)
         {
             port = Convert.ToInt16(txtPort.Text);
-            if(c3d.m_CMotor.Connect(port, 115200) == true)
+            if (c3d.m_CMotor.Connect(port, 115200) == true)
             {
                 Ojw.CMessage.Write("연결 성공");
 
@@ -341,6 +350,7 @@ namespace Mecanoid_Controller
                 mecanumMode = false;
                 buttonHide();
                 btnStandPose.Enabled = true;
+                btnStandTall.Enabled = true;
                 btnMecanumPose.Enabled = true;
                 btnDisconnect.Enabled = true;
                 btnTorqueOn.Enabled = true;
@@ -364,30 +374,33 @@ namespace Mecanoid_Controller
         private void btnWalkBack_Click(object sender, EventArgs e)
         {
             Ojw.CMessage.Write("뒤로 걷기");
+            buttonWorking(false);
             walking = true;
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackStartR.dmt", false);
+            c3d.Motion_Play(@"motions\walkBackStartR.dmt", false);
             bool rightStep = true;
             while (walking)
             {
                 if (rightStep == true)
                 {
-                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackWalkingL.dmt", false);
+                    c3d.Motion_Play(@"motions\walkBackWalkingL.dmt", false);
                     rightStep = false;
                 }
                 else
                 {
-                    c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackWalkingR.dmt", false);
+                    c3d.Motion_Play(@"motions\walkBackWalkingR.dmt", false);
                     rightStep = true;
                 }
             }
             if (rightStep == true)
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackEndL.dmt", false);
+                c3d.Motion_Play(@"motions\walkBackEndL.dmt", false);
             }
             else
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\walkBackEndR.dmt", false);
+                c3d.Motion_Play(@"motions\walkBackEndR.dmt", false);
             }
+            c3d.Motion_Play(@"motions\stand2.dmt", false);
+            buttonWorking(true);
         }
 
         private void btnTorqueOn_Click(object sender, EventArgs e)
@@ -399,7 +412,7 @@ namespace Mecanoid_Controller
         private void btnTorqueOff_Click(object sender, EventArgs e)
         {
             c3d.m_CMotor.DrvSrv(false, false);
-            motor.SetTorque(true, true);
+            motor.SetTorque(false, false);
         }
 
         private void buttonHide()
@@ -414,15 +427,15 @@ namespace Mecanoid_Controller
             btnR.Enabled = mecanumMode;
             btnTurnL.Enabled = mecanumMode;
             btnTurnR.Enabled = mecanumMode;
-            btnTrans1.Enabled = !mecanumMode;
             btnStopMecanum.Enabled = mecanumMode;
+            btnTrans2.Enabled = mecanumMode;
 
+            btnTrans1.Enabled = !mecanumMode;
             btnWalkStraight.Enabled = !mecanumMode;
             btnWalkStop.Enabled = !mecanumMode;
             btnWalkLeft.Enabled = !mecanumMode;
             btnWalkRight.Enabled = !mecanumMode;
             btnWalkBack.Enabled = !mecanumMode;
-            btnTrans2.Enabled = mecanumMode;
         }
 
         private void buttonAllHide()
@@ -439,6 +452,7 @@ namespace Mecanoid_Controller
             btnTurnR.Enabled = false;
             btnTrans1.Enabled = false;
             btnStopMecanum.Enabled = false;
+            btnStandTall.Enabled = false;
 
             btnWalkStraight.Enabled = false;
             btnWalkStop.Enabled = false;
@@ -454,12 +468,24 @@ namespace Mecanoid_Controller
             btnDisconnect.Enabled = false;
         }
 
+        private void buttonWorking(bool aa)
+        {
+            btnWalkStraight.Enabled = aa;
+            btnWalkLeft.Enabled = aa;
+            btnWalkRight.Enabled = aa;
+            btnWalkBack.Enabled = aa;
+            btnStandTall.Enabled = aa;
+            btnStandPose.Enabled = aa;
+            btnMecanumPose.Enabled = aa;
+            btnTrans1.Enabled = aa;
+        }
+
         private void btnMecanumPose_Click(object sender, EventArgs e)
         {
             Ojw.CMessage.Write("메카넘 포즈");
             motor.Close();
             c3d.m_CMotor.Connect(port, 115200);
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\poseMecanum.dmt", false);
+            c3d.Motion_Play(@"motions\poseMecanum.dmt", false);
             c3d.m_CMotor.DisConnect();
             motor.Open(port, 115200);
             motor.SetTorque(true, true);
@@ -469,26 +495,162 @@ namespace Mecanoid_Controller
 
         private void btnWalkRight_Click(object sender, EventArgs e)
         {
-            Ojw.CMessage.Write("오른쪽으로 걷기");
+            Ojw.CMessage.Write("오른쪽으로 걷기 시작");
+            buttonWorking(false);
             walking = true;
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightStart.dmt", false);
+            c3d.Motion_Play(@"motions\turnRightStart.dmt", false);
             while (walking)
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightWalking.dmt", false);
+                c3d.Motion_Play(@"motions\turnRightWalking.dmt", false);
             }
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnRightEnd.dmt", false);
+            c3d.Motion_Play(@"motions\turnRightEnd.dmt", false);
+            c3d.Motion_Play(@"motions\stand2.dmt", false);
+            Ojw.CMessage.Write("오른쪽으로 걷기 종료");
+            buttonWorking(true);
         }
 
         private void btnWalkLeft_Click(object sender, EventArgs e)
         {
-            Ojw.CMessage.Write("왼쪽으로 걷기");
+            Ojw.CMessage.Write("왼쪽으로 걷기 시작");
+            buttonWorking(false);
             walking = true;
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftStart.dmt", false);
+            c3d.Motion_Play(@"motions\turnLeftStart.dmt", false);
             while (walking)
             {
-                c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftWalking.dmt", false);
+                c3d.Motion_Play(@"motions\turnLeftWalking.dmt", false);
             }
-            c3d.Motion_Play(@"D:\Mecanoid project\motions\turnLeftEnd.dmt", false);
+            c3d.Motion_Play(@"motions\turnLeftEnd.dmt", false);
+            c3d.Motion_Play(@"motions\stand2.dmt", false);
+            Ojw.CMessage.Write("왼쪽으로 걷기 종료");
+            buttonWorking(true);
+        }
+
+        private void btnStandTall_Click(object sender, EventArgs e)
+        {
+            c3d.Motion_Play(@"motions\stand3Slow.dmt", false);
+        }
+
+        private Ojw.CJoystick m_CJoy = new Ojw.CJoystick(Ojw.CJoystick._ID_0); // 조이스틱 선언
+        private Ojw.CTimer m_CTmr_Joystick = new Ojw.CTimer(); // 조이스틱의 연결을 주기적으로 체크할 타이머
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            // 조이스틱 정보 갱신
+            m_CJoy.Update();
+            // 조이스틱이 살아 있는지 체크하는 함수
+            FJoystick_Check_Alive();
+            // 조이스틱 데이타 체크
+            FJoystick_Check_Data();
+        }
+
+        private void FJoystick_Check_Alive()
+        {
+            #region Joystick Check
+
+            Color m_colorLive = Color.Green; // 살았을 경우의 색
+            Color m_colorDead = Color.Gray; // 죽었을 경우의 색
+            if (m_CJoy.IsValid == false)
+            {
+                #region 조이스틱이 연결되지 않았음을 표시
+                if (lbJoystick.ForeColor != m_colorDead)
+                {
+                    lbJoystick.Text = "Joystick (No Connected)";
+                    lbJoystick.ForeColor = m_colorDead;
+                }
+                #endregion 조이스틱이 연결되지 않았음을 표시
+
+                #region 3초마다 다시 재연결을 하려고 시도
+                if (m_CTmr_Joystick.Get() > 3000) // Joystic 이 죽어있다면 체크(3초단위)
+                {
+                    Ojw.CMessage.Write("Joystick Check again");
+                    m_CJoy = new Ojw.CJoystick(Ojw.CJoystick._ID_0);
+
+                    if (m_CJoy.IsValid == false)
+                    {
+                        Ojw.CMessage.Write("But we can't find a joystick device in here. Check your joystick device");
+                        m_CTmr_Joystick.Set(); // 타이머의 카운터를 다시 초기화 한다.
+                    }
+                    else Ojw.CMessage.Write("Joystick is Connected");
+                }
+                #endregion 3초마다 다시 재연결을 하려고 시도
+            }
+            else
+            {
+                #region 연결 되었음을 표시
+                if (lbJoystick.ForeColor != m_colorLive)
+                {
+                    lbJoystick.Text = "Joystick (Connected)";
+                    lbJoystick.ForeColor = m_colorLive;
+                }
+                #endregion 연결 되었음을 표시
+            }
+            #endregion Joystick Check
+        }
+
+        
+        private void FJoystick_Check_Data()
+        {
+            double mecFB = 0;
+            double mecRL = 0;
+            double mecT = 0;
+            bool light = false;
+            if (mecanumMode == true)
+            {
+
+                if((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5) > 1)
+                {
+                    mecFB = (-(m_CJoy.dY1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
+                    mecRL = ((m_CJoy.dX1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
+                    light = true;
+                }
+                else
+                {
+                    if (m_CJoy.dY1 > 0.55 | m_CJoy.dY1 < 0.45)
+                    {
+                        mecFB = -(m_CJoy.dY1 - 0.5) * mecanumSpd * mecanumAdd;
+                        light = true;
+                    }
+                    if (m_CJoy.dX1 > 0.55 | m_CJoy.dX1 < 0.45)
+                    {
+                        mecRL = (m_CJoy.dX1 - 0.5) * mecanumSpd * mecanumAdd;
+                        light = true;
+                    }
+                }
+                if (m_CJoy.dX0 > 0.55 | m_CJoy.dX0 < 0.45)
+                {
+                    mecT = (m_CJoy.dX0 - 0.5) * mecanumSpd * mecanumAdd;
+                    light = true;
+                }
+
+                motor.Set_Turn(30, (int)(-mecFB + mecRL + mecT));
+                motor.Set_Turn(31, (int)(-mecFB - mecRL + mecT));
+                motor.Set_Turn(32, (int)(mecFB - mecRL + mecT));
+                motor.Set_Turn(33, (int)(mecFB + mecRL + mecT));
+
+                motor.Set_Flag_Led(30, light, light, false);
+                motor.Set_Flag_Led(31, light, light, false);
+                motor.Set_Flag_Led(32, light, light, false);
+                motor.Set_Flag_Led(33, light, light, false);
+
+                motor.Send_Motor(10);
+                motor.Wait_Delay(10);
+            }
+            else
+            {
+
+            }
+        }
+
+        private void checkBoxGamepad_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBoxGamepad.Checked == true)
+            {
+                timer2.Enabled = true;
+            }
+            else
+            {
+                timer2.Enabled = false;
+            }
         }
     }
 }

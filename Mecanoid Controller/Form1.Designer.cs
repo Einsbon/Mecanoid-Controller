@@ -57,6 +57,10 @@
             this.btnTorqueOn = new System.Windows.Forms.Button();
             this.btnTorqueOff = new System.Windows.Forms.Button();
             this.btnMecanumPose = new System.Windows.Forms.Button();
+            this.btnStandTall = new System.Windows.Forms.Button();
+            this.checkBoxGamepad = new System.Windows.Forms.CheckBox();
+            this.lbJoystick = new System.Windows.Forms.Label();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // btnF
@@ -65,7 +69,7 @@
             this.btnF.Margin = new System.Windows.Forms.Padding(4);
             this.btnF.Name = "btnF";
             this.btnF.Size = new System.Drawing.Size(90, 90);
-            this.btnF.TabIndex = 0;
+            this.btnF.TabIndex = 21;
             this.btnF.Text = "앞";
             this.btnF.UseVisualStyleBackColor = true;
             this.btnF.Click += new System.EventHandler(this.btnF_Click);
@@ -273,7 +277,7 @@
             this.btnConnect.Location = new System.Drawing.Point(90, 13);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(72, 27);
-            this.btnConnect.TabIndex = 21;
+            this.btnConnect.TabIndex = 0;
             this.btnConnect.Text = "연결";
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
@@ -310,7 +314,7 @@
             // 
             // btnStandPose
             // 
-            this.btnStandPose.Location = new System.Drawing.Point(278, 321);
+            this.btnStandPose.Location = new System.Drawing.Point(278, 308);
             this.btnStandPose.Name = "btnStandPose";
             this.btnStandPose.Size = new System.Drawing.Size(101, 60);
             this.btnStandPose.TabIndex = 25;
@@ -348,11 +352,49 @@
             this.btnMecanumPose.UseVisualStyleBackColor = true;
             this.btnMecanumPose.Click += new System.EventHandler(this.btnMecanumPose_Click);
             // 
+            // btnStandTall
+            // 
+            this.btnStandTall.Location = new System.Drawing.Point(278, 374);
+            this.btnStandTall.Name = "btnStandTall";
+            this.btnStandTall.Size = new System.Drawing.Size(101, 42);
+            this.btnStandTall.TabIndex = 31;
+            this.btnStandTall.Text = "똑바로 서기";
+            this.btnStandTall.UseVisualStyleBackColor = true;
+            this.btnStandTall.Click += new System.EventHandler(this.btnStandTall_Click);
+            // 
+            // checkBoxGamepad
+            // 
+            this.checkBoxGamepad.AutoSize = true;
+            this.checkBoxGamepad.Location = new System.Drawing.Point(16, 400);
+            this.checkBoxGamepad.Name = "checkBoxGamepad";
+            this.checkBoxGamepad.Size = new System.Drawing.Size(123, 24);
+            this.checkBoxGamepad.TabIndex = 32;
+            this.checkBoxGamepad.Text = "조이스틱 사용";
+            this.checkBoxGamepad.UseVisualStyleBackColor = true;
+            this.checkBoxGamepad.CheckedChanged += new System.EventHandler(this.checkBoxGamepad_CheckedChanged);
+            // 
+            // lbJoystick
+            // 
+            this.lbJoystick.AutoSize = true;
+            this.lbJoystick.Location = new System.Drawing.Point(15, 373);
+            this.lbJoystick.Name = "lbJoystick";
+            this.lbJoystick.Size = new System.Drawing.Size(142, 20);
+            this.lbJoystick.TabIndex = 33;
+            this.lbJoystick.Text = "조이스틱: 연결 안됨";
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 50;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 725);
+            this.Controls.Add(this.lbJoystick);
+            this.Controls.Add(this.checkBoxGamepad);
+            this.Controls.Add(this.btnStandTall);
             this.Controls.Add(this.btnMecanumPose);
             this.Controls.Add(this.btnTorqueOff);
             this.Controls.Add(this.btnTorqueOn);
@@ -421,6 +463,10 @@
         private System.Windows.Forms.Button btnTorqueOn;
         private System.Windows.Forms.Button btnTorqueOff;
         private System.Windows.Forms.Button btnMecanumPose;
+        private System.Windows.Forms.Button btnStandTall;
+        private System.Windows.Forms.CheckBox checkBoxGamepad;
+        private System.Windows.Forms.Label lbJoystick;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 
