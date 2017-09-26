@@ -539,8 +539,11 @@ namespace Mecanoid_Controller
             m_CJoy.Update();
             // 조이스틱이 살아 있는지 체크하는 함수
             FJoystick_Check_Alive();
-            // 조이스틱 데이타 체크
-            FJoystick_Check_Data();
+            if (useJoystck)
+            {
+                // 조이스틱 데이타 체크
+                FJoystick_Check_Data();
+            }
         }
 
         private void FJoystick_Check_Alive()
@@ -554,13 +557,16 @@ namespace Mecanoid_Controller
                 #region 조이스틱이 연결되지 않았음을 표시
                 if (lbJoystick.ForeColor != m_colorDead)
                 {
-                    lbJoystick.Text = "Joystick (No Connected)";
+                    lbJoystick.Text = "조이스틱: 연결 안됨";
                     lbJoystick.ForeColor = m_colorDead;
                 }
                 #endregion 조이스틱이 연결되지 않았음을 표시
+                checkBoxGamepad.Checked = false;
+                checkBoxGamepad.Enabled = false;
+                timer2.Interval = 1000;
 
-                #region 3초마다 다시 재연결을 하려고 시도
-                if (m_CTmr_Joystick.Get() > 3000) // Joystic 이 죽어있다면 체크(3초단위)
+                #region 2초마다 다시 재연결을 하려고 시도
+                if (m_CTmr_Joystick.Get() > 2000) // Joystic 이 죽어있다면 체크(2초단위)
                 {
                     Ojw.CMessage.Write("Joystick Check again");
                     m_CJoy = new Ojw.CJoystick(Ojw.CJoystick._ID_0);
@@ -579,10 +585,13 @@ namespace Mecanoid_Controller
                 #region 연결 되었음을 표시
                 if (lbJoystick.ForeColor != m_colorLive)
                 {
-                    lbJoystick.Text = "Joystick (Connected)";
+                    lbJoystick.Text = "조이스틱: 연결 됨";
                     lbJoystick.ForeColor = m_colorLive;
                 }
                 #endregion 연결 되었음을 표시
+                
+                checkBoxGamepad.Enabled = true;
+                timer2.Interval = 50;
             }
             #endregion Joystick Check
         }
@@ -641,15 +650,16 @@ namespace Mecanoid_Controller
             }
         }
 
+        bool useJoystck = false;
         private void checkBoxGamepad_CheckedChanged(object sender, EventArgs e)
         {
             if(checkBoxGamepad.Checked == true)
             {
-                timer2.Enabled = true;
+                useJoystck = true;
             }
             else
             {
-                timer2.Enabled = false;
+                useJoystck = false;
             }
         }
     }
