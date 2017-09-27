@@ -61,6 +61,7 @@
             this.checkBoxGamepad = new System.Windows.Forms.CheckBox();
             this.lbJoystick = new System.Windows.Forms.Label();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.btnTorqueOff2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnF
@@ -324,7 +325,7 @@
             // 
             // btnTorqueOn
             // 
-            this.btnTorqueOn.Location = new System.Drawing.Point(51, 59);
+            this.btnTorqueOn.Location = new System.Drawing.Point(20, 58);
             this.btnTorqueOn.Name = "btnTorqueOn";
             this.btnTorqueOn.Size = new System.Drawing.Size(93, 55);
             this.btnTorqueOn.TabIndex = 27;
@@ -334,7 +335,7 @@
             // 
             // btnTorqueOff
             // 
-            this.btnTorqueOff.Location = new System.Drawing.Point(150, 59);
+            this.btnTorqueOff.Location = new System.Drawing.Point(119, 58);
             this.btnTorqueOff.Name = "btnTorqueOff";
             this.btnTorqueOff.Size = new System.Drawing.Size(93, 55);
             this.btnTorqueOff.TabIndex = 28;
@@ -388,11 +389,22 @@
             this.timer2.Interval = 50;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
+            // btnTorqueOff2
+            // 
+            this.btnTorqueOff2.Location = new System.Drawing.Point(218, 58);
+            this.btnTorqueOff2.Name = "btnTorqueOff2";
+            this.btnTorqueOff2.Size = new System.Drawing.Size(85, 53);
+            this.btnTorqueOff2.TabIndex = 35;
+            this.btnTorqueOff2.Text = "토크 오프 2";
+            this.btnTorqueOff2.UseVisualStyleBackColor = true;
+            this.btnTorqueOff2.Click += new System.EventHandler(this.btnTorqueOff2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 725);
+            this.Controls.Add(this.btnTorqueOff2);
             this.Controls.Add(this.lbJoystick);
             this.Controls.Add(this.checkBoxGamepad);
             this.Controls.Add(this.btnStandTall);
@@ -468,6 +480,7 @@
         private System.Windows.Forms.CheckBox checkBoxGamepad;
         private System.Windows.Forms.Label lbJoystick;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Button btnTorqueOff2;
     }
 }
 

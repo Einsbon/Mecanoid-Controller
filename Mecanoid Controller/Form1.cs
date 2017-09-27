@@ -13,7 +13,8 @@ namespace Mecanoid_Controller
         bool mecanumMode = false;
 
         int mecanumSpd = 1000;
-        double mecanumAdd = 1.6;
+        double mecanumAdd = 1.8;
+        double mecanumAdd2 = 2.5;
 
         public Form1()
         {
@@ -81,6 +82,7 @@ namespace Mecanoid_Controller
 
         private void btnTrans1_Click(object sender, EventArgs e)
         {
+            buttonAllHide();
             Ojw.CMessage.Write("메카넘 모드로 트랜스포밍");
             motor.Close();
             c3d.Motion_Play(@"motions\transformingRightQuick.dmt", true);
@@ -93,6 +95,7 @@ namespace Mecanoid_Controller
 
         private void btnTrans2_Click(object sender, EventArgs e)
         {
+            buttonAllHide();
             Ojw.CMessage.Write("보행 모드로 트랜스포밍");
             motor.Close(); 
             c3d.m_CMotor.Connect(port, 115200);
@@ -330,8 +333,6 @@ namespace Mecanoid_Controller
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            motor.SetTorque(true, false);
-            c3d.m_CMotor.DrvSrv(true, false);
             motor.Close();
             c3d.m_CMotor.DisConnect();
 
@@ -436,6 +437,9 @@ namespace Mecanoid_Controller
             btnWalkLeft.Enabled = !mecanumMode;
             btnWalkRight.Enabled = !mecanumMode;
             btnWalkBack.Enabled = !mecanumMode;
+
+            btnTorqueOff.Enabled = true;
+            btnTorqueOn.Enabled = true;
         }
 
         private void buttonAllHide()
@@ -463,6 +467,35 @@ namespace Mecanoid_Controller
 
             btnTorqueOff.Enabled = false;
             btnTorqueOn.Enabled = false;
+            btnStandPose.Enabled = false;
+            btnMecanumPose.Enabled = false;
+            btnDisconnect.Enabled = false;
+        }
+
+        private void buttonJoyHide()
+        {
+            btnB.Enabled = false;
+            btnBL.Enabled = false;
+            btnBR.Enabled = false;
+            btnF.Enabled = false;
+            btnFL.Enabled = false;
+            btnFR.Enabled = false;
+            btnL.Enabled = false;
+            btnR.Enabled = false;
+            btnTurnL.Enabled = false;
+            btnTurnR.Enabled = false;
+            btnTrans1.Enabled = false;
+            btnStopMecanum.Enabled = false;
+            btnStandTall.Enabled = false;
+
+            btnWalkStraight.Enabled = false;
+            btnWalkStop.Enabled = false;
+            btnWalkLeft.Enabled = false;
+            btnWalkRight.Enabled = false;
+            btnWalkBack.Enabled = false;
+            btnTrans2.Enabled = false;
+
+
             btnStandPose.Enabled = false;
             btnMecanumPose.Enabled = false;
             btnDisconnect.Enabled = false;
@@ -527,7 +560,14 @@ namespace Mecanoid_Controller
 
         private void btnStandTall_Click(object sender, EventArgs e)
         {
+            Ojw.CMessage.Write("선 동작");
+            motor.Close();
+            c3d.m_CMotor.Connect(port, 115200);
+            c3d.m_CMotor.DrvSrv(true, true);
+            //c3d.Motion_Play(@"D:\Mecanoid project\motions\stand2Slow.dmt", false);
             c3d.Motion_Play(@"motions\stand3Slow.dmt", false);
+            mecanumMode = false;
+            buttonHide();
         }
 
         private Ojw.CJoystick m_CJoy = new Ojw.CJoystick(Ojw.CJoystick._ID_0); // 조이스틱 선언
@@ -602,39 +642,61 @@ namespace Mecanoid_Controller
             double mecFB = 0;
             double mecRL = 0;
             double mecT = 0;
+            int inside = 0;
             bool light = false;
-            if (mecanumMode == true)
+            if (mecanumMode == true)//메카넘모드일때
             {
 
                 if((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5) > 1)
                 {
-                    mecFB = (-(m_CJoy.dY1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
-                    mecRL = ((m_CJoy.dX1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
-                    light = true;
+                    //mecFB = (-(m_CJoy.dY1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
+                    //mecRL = ((m_CJoy.dX1 - 0.5) / Math.Sqrt((m_CJoy.dX1 - 0.5) * (m_CJoy.dX1 - 0.5) + (m_CJoy.dY1 - 0.5) * (m_CJoy.dY1 - 0.5))) * mecanumSpd * mecanumAdd;
+                    //light = true;
                 }
                 else
                 {
-                    if (m_CJoy.dY1 > 0.55 | m_CJoy.dY1 < 0.45)
+                    if (m_CJoy.dY1 > 0.53 | m_CJoy.dY1 < 0.47)
                     {
                         mecFB = -(m_CJoy.dY1 - 0.5) * mecanumSpd * mecanumAdd;
                         light = true;
                     }
-                    if (m_CJoy.dX1 > 0.55 | m_CJoy.dX1 < 0.45)
+                    if (m_CJoy.dX1 > 0.53 | m_CJoy.dX1 < 0.47)
                     {
                         mecRL = (m_CJoy.dX1 - 0.5) * mecanumSpd * mecanumAdd;
                         light = true;
                     }
                 }
-                if (m_CJoy.dX0 > 0.55 | m_CJoy.dX0 < 0.45)
+                /*if (m_CJoy.dX0 > 0.55 | m_CJoy.dX0 < 0.45)
                 {
                     mecT = (m_CJoy.dX0 - 0.5) * mecanumSpd * mecanumAdd;
                     light = true;
+                }*/
+                if (m_CJoy.Slide>0.53 | m_CJoy.Slide < 0.47)
+                {
+                    mecT = -(m_CJoy.Slide - 0.5) * mecanumSpd * mecanumAdd;
+                    light = true;
+                }
+                if (m_CJoy.dX0 > 0.53 | m_CJoy.dX0 < 0.47| m_CJoy.dY0 > 0.53 | m_CJoy.dY0 < 0.47)
+                {
+                    mecFB = -(m_CJoy.dY0 - 0.5) * mecanumSpd * mecanumAdd2;
+                    mecT = (m_CJoy.dX0 - 0.5) * mecanumSpd * mecanumAdd2;
+                    light = true;
+                    /*if (mecFB < 0)
+                    {
+                        mecT = -mecT;
+                    }*/
                 }
 
-                motor.Set_Turn(30, (int)(-mecFB + mecRL + mecT));
-                motor.Set_Turn(31, (int)(-mecFB - mecRL + mecT));
-                motor.Set_Turn(32, (int)(mecFB - mecRL + mecT));
-                motor.Set_Turn(33, (int)(mecFB + mecRL + mecT));
+                if (m_CJoy.IsDown(Ojw.CJoystick.PadKey.Button1) == true)
+                {
+                    // A   보정 기능
+                    inside = 150;
+                }
+
+                motor.Set_Turn(30, (int)(-mecFB + mecRL + mecT - inside));
+                motor.Set_Turn(31, (int)(-mecFB - mecRL + mecT + (2 * inside)));
+                motor.Set_Turn(32, (int)(mecFB - mecRL + mecT - (2 * inside)));
+                motor.Set_Turn(33, (int)(mecFB + mecRL + mecT + inside));
 
                 motor.Set_Flag_Led(30, light, light, false);
                 motor.Set_Flag_Led(31, light, light, false);
@@ -644,8 +706,67 @@ namespace Mecanoid_Controller
                 motor.Send_Motor(10);
                 motor.Wait_Delay(10);
             }
-            else
+            else//걷기모드일때
             {
+                if (!walking)
+                {
+                    if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.POVUp) == true) //위 버튼
+                    {
+                        btnWalkStraight_Click(null, null);
+                    }
+                    else if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.POVDown) == true) //아래 버튼
+                    {
+                        btnWalkBack_Click(null, null);
+                    }
+                    else if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.POVRight) == true)
+                    {
+                        btnWalkRight_Click(null, null);
+                    }
+                    else if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.POVLeft) == true)
+                    {
+                        btnWalkLeft_Click(null, null);
+                    }
+                }
+                if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.Button2) == true)
+                {
+                    btnWalkStop_Click(null, null);
+                }
+            }
+
+            if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.Button5) == true) // 보행 모드
+            {
+                if (mecanumMode == true) //메카넘 모드일때
+                {
+                    btnTrans2_Click(null, null);
+                }
+                else
+                {
+                    btnStandPose_Click(null, null);
+                }
+            }
+
+            if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.Button6) == true) // 메카넘 모드 버튼
+            {
+                if (mecanumMode == false) //보행 모드일때
+                {
+                    btnTrans1_Click(null, null);
+                }
+                else
+                {
+                    btnMecanumPose_Click(null, null);
+                }
+            }
+            if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.Button7) == true)
+            {
+                // BACK
+                c3d.m_CMotor.DrvSrv(false, false);
+                motor.SetTorque(false, false);
+            }
+            if (m_CJoy.IsDown_Event(Ojw.CJoystick.PadKey.Button8) == true)
+            {
+                // START
+                c3d.m_CMotor.DrvSrv(true, true);
+                motor.SetTorque(true, true);
 
             }
         }
@@ -661,6 +782,12 @@ namespace Mecanoid_Controller
             {
                 useJoystck = false;
             }
+        }
+
+        private void btnTorqueOff2_Click(object sender, EventArgs e)
+        {
+            c3d.m_CMotor.DrvSrv(true, false);
+            motor.SetTorque(true, false);
         }
     }
 }
